@@ -1,13 +1,12 @@
 # Curt's Hiking App
 
-A React Native application for discovering and tracking hiking trails with interactive maps powered by Mapbox.
+A React Native application for discovering and tracking hiking trails with interactive maps powered by Mapbox Mobile SDK API.
 
 ## Features
 
 - Interactive map with trail markers
 - Trail list and details
 - Hiking activity tracking
-- Sample trail data for the Pacific Northwest
 
 ## Prerequisites
 
@@ -57,6 +56,7 @@ bundle exec pod install
 ### Step 1: Start Metro
 
 First, you will need to run **Metro**, the JavaScript build tool for React Native.
+Also, you need to have an Android Emulator running or have an IPhone connected to a Mac.
 
 To start the Metro dev server, run the following command from the root of your React Native project:
 
@@ -113,18 +113,10 @@ src/
     └── env.d.ts           # Environment type definitions
 ```
 
-## Development
-
-When you want to forcefully reload, for example to reset the state of your app:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
 ## Troubleshooting
 
 ### Map not loading
 - Verify your Mapbox access token is correctly set in `.env`
-- Check internet connection
 - Ensure the token has the required permissions
 
 ### Build failures
