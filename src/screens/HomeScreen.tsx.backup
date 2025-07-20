@@ -1,0 +1,159 @@
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  PermissionsAndroid,
+  Platform,
+} from 'react-native';
+import Mapbox, {MapView, Camera, PointAnnotation} from '@rnmapbox/maps';
+import Geolocation from 'react-native-geolocation-service';
+import {MAPBOX_ACCESS_TOKEN} from '../config/mapbox';
+
+Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
+
+interface Location {
+  latitude: number;
+  longitude: number;
+}
+
+const HomeScreen: React.FC = () => {
+  const [location, setLocation] = useState<Location | null>(null);
+  const [hasLocationPermission, setHasLocationPermission] = useState(false);
+
+  const requestLocationPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Location Permission',
+            message: 'This app needs access to location to show your position on the map.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          setHasLocationPermission(true);
+          getCurrentLocation();
+        } else {
+          Alert.alert(
+            'Location Permission Denied',
+            'You can still use the app, but your location won\'t be shown on the map.',
+          );
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    } else {
+      setHasLocationPermission(true);
+      getCurrentLocation();
+    }
+  };
+
+  const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      error => {
+        console.log('Location error:', error);
+        Alert.alert(
+          'Location Error',
+          'Unable to get your current location. Using default location.',
+        );
+        setLocation({
+          latitude: 37.78825,
+          longitude: -122.4324,
+        });
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  };
+
+  useEffect(() => {
+    requestLocationPermission();
+  }, []);
+
+  const defaultLocation = [-122.4324, 37.78825]; // [longitude, latitude] for Mapbox
+  const currentLocation = location ? [location.longitude, location.latitude] : defaultLocation;
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Hiking App</Text>
+        <Text style={styles.subtitle}>
+          {hasLocationPermission ? 'Location enabled' : 'Location disabled'}
+        </Text>
+      </View>
+      
+      <MapView style={styles.map} styleURL={Mapbox.StyleURL.Outdoors}>
+        <Camera
+          centerCoordinate={currentLocation}
+          zoomLevel={location ? 14 : 10}
+        />
+        
+        {location && (
+          <PointAnnotation
+            id="user-location"
+            coordinate={[location.longitude, location.latitude]}
+          >
+            <View style={styles.annotationContainer}>
+              <View style={styles.annotationFill} />
+            </View>
+          </PointAnnotation>
+        )}
+      </MapView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    backgroundColor: '#4CAF50',
+    padding: 20,
+    paddingTop: 40,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 14,
+    color: 'white',
+    textAlign: 'center',
+    marginTop: 5,
+    opacity: 0.8,
+  },
+  map: {
+    flex: 1,
+  },
+  annotationContainer: {
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    borderRadius: 15,
+  },
+  annotationFill: {
+    width: 15,
+    height: 15,
+    borderRadius: 15,
+    backgroundColor: '#4CAF50',
+  },
+});
+
+export default HomeScreen;

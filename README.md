@@ -1,10 +1,60 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Curt's Hiking App
 
-# Getting Started
+A React Native application for discovering and tracking hiking trails with interactive maps powered by Mapbox.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Features
 
-## Step 1: Start Metro
+- Interactive map with trail markers
+- Trail list and details
+- Hiking activity tracking
+- Sample trail data for the Pacific Northwest
+
+## Prerequisites
+
+> **Note**: Make sure you have completed the [React Native Environment Setup](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+
+## Setup
+
+### 1. Environment Configuration
+
+Create a `.env` file in the root directory (copy from `.env.example`):
+
+```bash
+cp .env.example .env
+```
+
+Add your Mapbox access token to the `.env` file:
+
+```
+MAPBOX_ACCESS_TOKEN=your_mapbox_access_token_here
+MAPBOX_DOWNLOADS_TOKEN=your_mapbox_access_token_here
+```
+
+To get a Mapbox access token:
+1. Sign up at [Mapbox](https://account.mapbox.com/)
+2. Go to [Access Tokens](https://account.mapbox.com/access-tokens/)
+3. Create a new token or use the default public token
+
+### 2. Install Dependencies
+
+```bash
+npm install
+# OR
+yarn install
+```
+
+### 3. iOS Setup (iOS only)
+
+Install CocoaPods dependencies:
+
+```bash
+bundle install
+bundle exec pod install
+```
+
+## Running the App
+
+### Step 1: Start Metro
 
 First, you will need to run **Metro**, the JavaScript build tool for React Native.
 
@@ -18,11 +68,11 @@ npm start
 yarn start
 ```
 
-## Step 2: Build and run your app
+### Step 2: Build and run your app
 
 With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
 
-### Android
+#### Android
 
 ```sh
 # Using npm
@@ -32,23 +82,7 @@ npm run android
 yarn android
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+#### iOS
 
 ```sh
 # Using npm
@@ -60,33 +94,51 @@ yarn ios
 
 If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## Project Structure
 
-## Step 3: Modify your app
+```
+src/
+├── components/          # Reusable React components
+│   ├── MapComponent.tsx    # Main map display
+│   ├── TrailsList.tsx      # Trail listing component
+│   ├── TrailDetails.tsx    # Individual trail details
+│   └── HikeTracker.tsx     # Hiking activity tracker
+├── config/
+│   └── mapbox.ts          # Mapbox configuration
+├── data/
+│   └── sampleTrails.ts    # Sample trail data
+├── screens/
+│   └── HomeScreen.tsx     # Main app screen
+└── types/
+    └── env.d.ts           # Environment type definitions
+```
 
-Now that you have successfully run the app, let's make changes!
+## Development
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+When you want to forcefully reload, for example to reset the state of your app:
 
 - **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
 - **iOS**: Press <kbd>R</kbd> in iOS Simulator.
 
-## Congratulations! :tada:
+## Troubleshooting
 
-You've successfully run and modified your React Native App. :partying_face:
+### Map not loading
+- Verify your Mapbox access token is correctly set in `.env`
+- Check internet connection
+- Ensure the token has the required permissions
 
-### Now what?
+### Build failures
+- Clean your build: `npx react-native clean`
+- For iOS: `cd ios && xcodebuild clean`
+- For Android: `cd android && ./gradlew clean`
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+### Module resolution errors
+- Clear Metro cache: `npx react-native start --reset-cache`
+- Delete `node_modules` and reinstall: `rm -rf node_modules && npm install`
 
-# Troubleshooting
+For general React Native issues, see the [official troubleshooting guide](https://reactnative.dev/docs/troubleshooting).
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
+## Learn More
 
 To learn more about React Native, take a look at the following resources:
 
